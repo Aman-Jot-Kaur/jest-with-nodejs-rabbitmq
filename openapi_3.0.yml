@@ -1,0 +1,295 @@
+openapi: 3.0.3
+info:
+  title: Banking Catalog
+  description: Banking catalog Application
+  version: 1.0.0
+  contact:
+    name: Karan Kaushal
+    email: karan.1123@zenmonk.tech
+paths:
+  /banks:
+    post:
+      summary: To register a new bank in our catalog application
+      description: Register a new bank in our catalog application
+      requestBody:
+        description: Registering a new Bank in our catalog application
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankRequestSchema'
+        required: true
+      responses:
+        '201':
+          description: Bank registered successfully in our catalog application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankResponseSchema'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        default:
+          description: Unexpected error
+    get:
+      summary: Get all banks list
+      responses:
+        '200':
+          description: Get all banks list
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/AllBanks'
+        '204':
+          description: No Content Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        default:
+          description: Unexpected error
+  /banks/{uuid}:
+   get:
+    summary: Get particular bank details
+    parameters:
+        - name: uuid
+          in: query
+          description: Filter a bank using the uuid.
+          schema:
+             type: string
+    responses:
+        '200':
+          description: Get a particular bank's details
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/BankResponseSchema'
+        '204':
+          description: No Content Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        default:
+          description: Unexpected error
+   patch:
+    summary:  Update any bank's details
+    parameters:
+        - name: uuid
+          in: query
+          description: Filter a bank using the uuid.
+          schema:
+             type: string
+    requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankUpdateRequestSchema'
+        required: true
+    responses:
+        '200':
+          description: Update particular details of a bank
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/BankResponseSchema'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        default:
+          description: Unexpected error
+   delete:
+    summary: Delete a particular bank
+    parameters:
+        - name: uuid
+          in: query
+          description: Filter a bank using the uuid.
+          schema:
+            type: string
+    responses:
+        '200':
+          description: Delete a particular bank
+          content:
+             application/json:
+              schema:
+                type: object
+                properties:
+                   message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '404':
+          description: Resource not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                   error:
+                    type: string
+        default:
+          description: Unexpected error
+components:
+  schemas:
+    BankResponseSchema:
+      type: object
+      properties:
+        uuid:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        submittedBy:
+          type: string
+        status:
+          type: string
+        name:
+          type: string
+        abbreviation:
+          type: string
+        swiftCode:
+          type: string
+        description:
+          type: string
+        countryName:
+          type: string
+    BankRequestSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+        swiftCode:
+          type: string
+        description:
+          type: string
+        countryName:
+          type: string
+      required:
+        - abbreviation
+        - name
+        - countryName
+    BankUpdateRequestSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+        swiftCode:
+          type: string
+        description:
+          type: string
+        countryName:
+          type: string
+    AllBanks:
+      type: object
+      properties:
+        status:
+          type: string
+        RequestsDataLength:
+          type: integer
+        RequestsData:
+          type: array
+          items:
+              $ref: '#/components/schemas/BankRequestSchema'
